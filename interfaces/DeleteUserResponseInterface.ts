@@ -1,3 +1,7 @@
 import { UserInterface } from "./UserInterface";
 
-export interface DeleteUserResponseInterface extends UserInterface {}
+export interface DeleteUserResponseInterface {
+    user?: UserInterface | undefined | null,
+    userAuth?: UserInterface | undefined | null,
+    msg?: string
+}

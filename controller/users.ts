@@ -11,8 +11,10 @@ import {
   PostUserRequestBody,
   DeleteUserRequestParams,
   DeleteUserResponseInterface,
+  UserRoleEnum,
 } from "../interfaces";
 import { PostUserResponseInterface } from "../interfaces/PostUserResponseInterface";
+import { RequestInterface } from "../interfaces/RequestInterface";
 
 const usersGet = async (
   req: Request<{}, any, any, GetUsersReqQuerysInt>,
@@ -59,16 +61,20 @@ const usersPost = async (
   res.status(201).json(user);
 };
 const usersDelete = async (
-  req: Request<DeleteUserRequestParams>,
+  req: RequestInterface<DeleteUserRequestParams>,
   res: Response<DeleteUserResponseInterface | undefined | null>
 ) => {
   const { id } = req.params;
-
-  const user = await User.findByIdAndUpdate<UserInterface>(id, {
-    active: false,
-  });
-
-  res.json(user);
+  const uid = req.uid
+  const userAuth = req.user
+  if(id !== uid ) {
+    const user = await User.findByIdAndUpdate<UserInterface>(id, {
+      active: false,
+    });
+    res.json({user, userAuth});
+  } else {
+     return res.status(401).json({ msg: "Users can't remove theyself" })
+  }
 };
 
 export { usersGet, usersPut, usersPost, usersDelete };
