@@ -1,19 +1,24 @@
 import express, { Express } from "express";
 import cors from "cors"
 import { dbConnection } from "../database/dbconnection";
-import { authRouter, userRouter } from "../Routes";
+import { authRouter, userRouter, categoriesRouter, productsRouter } from "../Routes";
+import { PathsInterface } from "../interfaces";
 
 
 export class Server {
     private app: Express
     private port: string | undefined
-    public usersPath: string
-    public authPath: string
+    public paths: PathsInterface
+
     constructor(){
         this.app = express()
         this.port = process.env.PORT
-        this.usersPath = "/api/users"
-        this.authPath = "/api/auth"
+        this.paths = {
+            auth: "/api/auth",
+            user: "/api/users",
+            categories: "/api/categories",
+            products: "/api/products"
+        }
 
         this.connectDatabase()
         this.middlewares()
@@ -28,8 +33,10 @@ export class Server {
        this.app.use(express.json())
     }
     public routes() {
-        this.app.use(this.usersPath, userRouter)
-        this.app.use(this.authPath, authRouter)
+        this.app.use(this.paths.user, userRouter)
+        this.app.use(this.paths.auth, authRouter)
+        this.app.use(this.paths.categories, categoriesRouter)
+        this.app.use(this.paths.products, productsRouter)
     }
     public listen() {
         this.app.listen( this.port, () => {
