@@ -3,6 +3,7 @@ import cors from "cors"
 import { dbConnection } from "../database/dbconnection";
 import { authRouter, userRouter, categoriesRouter, productsRouter } from "../Routes";
 import { PathsInterface } from "../interfaces";
+import { searchRouter } from "../Routes/search";
 
 
 export class Server {
@@ -17,7 +18,8 @@ export class Server {
             auth: "/api/auth",
             user: "/api/users",
             categories: "/api/categories",
-            products: "/api/products"
+            products: "/api/products",
+            search: "/api/search"
         }
 
         this.connectDatabase()
@@ -37,6 +39,7 @@ export class Server {
         this.app.use(this.paths.auth, authRouter)
         this.app.use(this.paths.categories, categoriesRouter)
         this.app.use(this.paths.products, productsRouter)
+        this.app.use(this.paths.search, searchRouter)
     }
     public listen() {
         this.app.listen( this.port, () => {

@@ -3,4 +3,5 @@ export interface PathsInterface {
     user: string
     categories: string
     products: string
+    search: string
 }
