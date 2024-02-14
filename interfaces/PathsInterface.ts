@@ -4,4 +4,5 @@ export interface PathsInterface {
     categories: string
     products: string
     search: string
+    uploads: string
 }
