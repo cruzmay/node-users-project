@@ -42,7 +42,8 @@ export class Server {
     this.app.use(express.json());
     this.app.use(fileUpload({
         useTempFiles : true,
-        tempFileDir : '/tmp/'
+        tempFileDir : '/tmp/',
+        createParentPath: true,
     }));
   }
   public routes() {
