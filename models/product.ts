@@ -31,7 +31,8 @@ description: {
 },
 available: {
     type: Boolean
-}
+},
+img: { type: String}
 })
 
 productsSchema.methods.toJSON = function() {

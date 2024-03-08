@@ -63,7 +63,6 @@ const postProduct = async (req: ProductPostInterface, res: Response) => {
 const putProduct = async (req: Request, res: Response) => {
   const id: string | undefined = req.params.id;
   let { user, ...rest } = req.body;
-  console.log({ rest });
   const product = await Product.findOneAndUpdate(
     { _id: id },
     { ...rest },

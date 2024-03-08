@@ -9,4 +9,5 @@ export interface ProductInterface {
     category: CategoriesInterface
     description: string
     available: boolean
+    img: string
 }

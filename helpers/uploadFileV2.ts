@@ -15,7 +15,6 @@ export const uploadFileV2 = (
   const separatedExt = name.split(".");
   const ext = separatedExt?.[separatedExt?.length - 1];
   const tempName = randomUUID() + "." + ext;
-  console.log(ext, !allowedExtensions.includes(ext));
 
   if (!allowedExtensions.includes(ext)) {
     return res

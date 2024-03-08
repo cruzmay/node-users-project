@@ -6,13 +6,10 @@ const defaultAllowedExt = ["jpg", "jpeg", "png"]
 
 const uploadFile = (upload: UploadedFile, folder: string = "", allowedExtensions = defaultAllowedExt) => {
   return new Promise((resolve, reject) => {
-    console.log(upload);
 
     const separatedExt = upload.name.split(".");
     const ext = separatedExt?.[separatedExt?.length - 1];
-    const tempName = randomUUID() + "." + ext;
-    console.log(ext, !allowedExtensions.includes(ext))
-
+    const tempName = randomUUID() + "_" + upload.name;
     if (!allowedExtensions.includes(ext)) {
       return reject(
         `${ext} extension name not allowed, should be: ${allowedExtensions}`
@@ -24,7 +21,7 @@ const uploadFile = (upload: UploadedFile, folder: string = "", allowedExtensions
       if (err) {
         reject(err);
       }
-      resolve(uploadPath);
+      resolve(tempName);
     });
   });
 };
