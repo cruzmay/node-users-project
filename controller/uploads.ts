@@ -1,14 +1,12 @@
-import { Document, Model, Schema } from 'mongoose';
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import { uploadFileV2 } from "../helpers/uploadFileV2";
-import { ProductInterface, UserInterface, ValidCollections } from "../interfaces";
-import { User } from "../models/User";
-import { Product } from "../models/product";
 import { uploadFile } from "../helpers";
 import path from 'path';
 import { existsSync, unlinkSync } from 'fs';
 import { getModel } from '../helpers/getModel';
+import {v2 as cloudinary} from 'cloudinary';
+          
+cloudinary.config(process.env.CLOUDINARY_URL as string);
 
 
 const uploadFiles = async (req: Request, res: Response) => {
@@ -25,9 +23,7 @@ const updateFileUpload = async (req: Request, res: Response) => {
   try {
     const modelo = await getModel(id, collection)
     if(modelo.img) {
-      console.log(modelo.img)
       const imgPath =  path.join(__dirname, '../uploads', collection, modelo.img)
-      console.log("imgPath", imgPath)
       if(existsSync(imgPath)) {
         console.log(true)
         unlinkSync(imgPath)
@@ -35,6 +31,25 @@ const updateFileUpload = async (req: Request, res: Response) => {
     }
     const img: string = await uploadFile(req.files?.upload as UploadedFile, collection) as string
     modelo.img = img
+    // @ts-ignore
+    await modelo.save()
+    res.json(modelo)
+  } catch (error) {
+    res.status(500).json({msg: error})
+  }
+}
+const updateFileUploadCloudinary = async (req: Request, res: Response) => {
+  const { id, collection } = req.params
+  try {
+    const modelo = await getModel(id, collection)
+    if(modelo.img) {
+      const imgArr =  modelo.img.split("/")
+      const [imageName] =  imgArr[imgArr.length - 1].split(".")
+      cloudinary.uploader.destroy(imageName)
+    }
+    const { tempFilePath } = req.files?.upload as UploadedFile
+    const resp = await cloudinary.uploader.upload(tempFilePath)
+    modelo.img = resp.secure_url
     // @ts-ignore
     await modelo.save()
     res.json(modelo)
@@ -62,4 +77,4 @@ const getImgFile = async (req: Request, res: Response) => {
   }
 }
 
-export { uploadFiles, updateFileUpload, getImgFile };
+export { uploadFiles, updateFileUpload, getImgFile, updateFileUploadCloudinary };

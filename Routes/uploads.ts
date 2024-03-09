@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getImgFile, updateFileUpload, uploadFiles } from "../controller";
+import { getImgFile, updateFileUploadCloudinary, uploadFiles } from "../controller";
 import { check } from "express-validator";
 import { validateCollection, validateFields, validateFiles } from "../middlewares";
 
@@ -11,7 +11,7 @@ router.put("/:collection/:id", [
     check("id", "not valid ID").isMongoId(),
     check("collection").custom(validateCollection),
     validateFields
-], updateFileUpload )
+], updateFileUploadCloudinary )
 router.get("/:collection/:id", [
     check("id", "not valid ID").isMongoId(),
     check("collection").custom(validateCollection),
